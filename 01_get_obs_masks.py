@@ -14,6 +14,7 @@ import xarray as xr
 import utils
 
 THRESHOLD = 0.8
+MARGIN = 0  # number of grid points around domain to exclude
 
 START_DATE = datetime(2025, 6, 17)
 END_DATE = datetime(2025, 8, 1)
@@ -39,6 +40,13 @@ for date in utils.daterange(START_DATE, END_DATE, timedelta(days=1)):
     ds.close()
 
 combined = xr.concat(vars_list, dim="time")
+
+# Exclude soundings in domain margins
+if MARGIN > 0:
+    mask = xr.zeros_like(combined, dtype=bool)
+    mask[:, MARGIN:-MARGIN, MARGIN:-MARGIN] = True
+    combined = combined.where(mask, 0)
+
 combined_ds = combined.to_dataset(name="obs_area_frac")
 combined_ds.to_netcdf(OUTPUT_DIR / "concat_area_frac.nc")
 
