@@ -13,3 +13,6 @@ mask[:, ::THINNING, ::THINNING] = True
 ds_thinned = ds.where(mask, 0)
 
 ds_thinned.to_netcdf("output/thinned.nc")
+
+ds.close()
+ds_thinned.close()
