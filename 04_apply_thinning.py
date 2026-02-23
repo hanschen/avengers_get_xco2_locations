@@ -5,7 +5,7 @@ import xarray as xr
 
 THINNING = 4
 
-ds = xr.open_dataset("output/cloud_filtered.nc")
+ds = xr.open_dataset("output/land_nadir.nc")
 
 mask = xr.zeros_like(ds["obs_area_frac"], dtype=bool)
 mask[:, ::THINNING, ::THINNING] = True
