@@ -10,7 +10,8 @@ import xarray as xr
 REF_YEAR = 2021
 OUTPUT_DIR = Path("output/xco2")
 
-ds = xr.load_dataset("output/thinned.nc")
+# ds = xr.load_dataset("output/thinned.nc")
+ds = xr.load_dataset("output/cloud_filtered.nc")
 
 ds_wrf = xr.load_dataset("input/wrfinput_d01")
 lats = ds_wrf["XLAT"].isel(Time=0)
