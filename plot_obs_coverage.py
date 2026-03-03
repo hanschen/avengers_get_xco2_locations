@@ -3,8 +3,9 @@
 
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
-
+import numpy as np
 import xarray as xr
 
 THRESHOLD = 1
@@ -35,15 +36,15 @@ proj = ccrs.LambertConformal(
     standard_parallels=(truelat1, truelat2),
 )
 
-lon_min = lons.min()
-lon_max = lons.max()
-lat_min = lats.min()
-lat_max = lats.max()
+cmap = plt.cm.viridis.copy()
+cmap.set_under("white")
+N = obs_num.data.max()
+colors = cmap(np.linspace(0, 1, N))
+colors[0] = [1, 1, 1, 1]
+cmap = mcolors.ListedColormap(colors)
 
+fig, ax = plt.subplots(figsize=(8, 6), subplot_kw={"projection": proj})
 
-fig, ax = plt.subplots(figsize=(12, 9), subplot_kw={"projection": proj})
-
-# Add features
 ax.add_feature(cfeature.COASTLINE.with_scale("50m"))
 ax.add_feature(cfeature.BORDERS.with_scale("50m"))
 
@@ -51,12 +52,15 @@ cf = ax.pcolormesh(
     lons,
     lats,
     obs_num,
-    cmap="viridis",
+    cmap=cmap,
     transform=ccrs.PlateCarree(),
 )
 
-fig.colorbar(cf)
 
-ax.set_extent([lon_min, lon_max, lat_min, lat_max], crs=ccrs.PlateCarree())
+cbar = fig.colorbar(cf)
+cbar.set_ticks(np.arange(N + 1))
+cbar.ax.tick_params(labelsize=12)
+cbar.set_label("Number of XCO2 observations", fontsize=14)
 
+plt.savefig("xco2.png", dpi=300, bbox_inches="tight")
 plt.show()
