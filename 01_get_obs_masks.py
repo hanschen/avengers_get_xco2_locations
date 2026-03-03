@@ -14,7 +14,7 @@ import xarray as xr
 import utils
 
 THRESHOLD = 0.8
-MARGIN = 0  # number of grid points around domain to exclude
+MARGIN = 5  # number of grid points around domain to exclude
 
 START_DATE = datetime(2025, 6, 17)
 END_DATE = datetime(2025, 8, 1)
