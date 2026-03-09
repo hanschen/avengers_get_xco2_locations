@@ -10,6 +10,9 @@ import xarray as xr
 REF_YEAR = 2021
 OUTPUT_DIR = Path("output/xco2")
 
+# Minimum grid fraction coverage to consider sounding
+THRESHOLD = 0.9
+
 # ds = xr.load_dataset("output/thinned.nc")
 ds = xr.load_dataset("output/cloud_filtered.nc")
 
@@ -29,7 +32,7 @@ for t, time in enumerate(ds.time.values):
     dt = dt.replace(year=REF_YEAR)  # type: ignore
     out_file = OUTPUT_DIR / f"{dt:sounding_%Y-%m-%d_%H:%M:%S}.dat"
 
-    j_indices, i_indices = np.where(obs == 1)
+    j_indices, i_indices = np.where(obs >= THRESHOLD)
     with open(out_file, "w") as f:
         f.write("# name,lat,lon\n")
 
