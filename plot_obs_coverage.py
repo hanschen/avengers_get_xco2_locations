@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
 
-THRESHOLD = 1
+THRESHOLD = 0.9
 
 # ds = xr.open_dataset("output/concat_area_frac.nc")
 # ds = xr.open_dataset("output/cloud_filtered.nc")
