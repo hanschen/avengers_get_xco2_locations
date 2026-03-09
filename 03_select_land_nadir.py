@@ -3,7 +3,6 @@
 
 import xarray as xr
 
-
 ds = xr.open_dataset("output/cloud_filtered.nc")
 ds_wrf = xr.open_dataset("input/wrfinput_d01")
 ds_out = ds.copy(deep=True)
