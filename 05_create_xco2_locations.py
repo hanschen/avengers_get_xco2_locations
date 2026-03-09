@@ -13,8 +13,9 @@ OUTPUT_DIR = Path("output/xco2")
 # Minimum grid fraction coverage to consider sounding
 THRESHOLD = 0.9
 
+# ds = xr.load_dataset("output/cloud_filtered.nc")
+ds = xr.load_dataset("output/land_nadir.nc")
 # ds = xr.load_dataset("output/thinned.nc")
-ds = xr.load_dataset("output/cloud_filtered.nc")
 
 ds_wrf = xr.load_dataset("input/wrfinput_d01")
 lats = ds_wrf["XLAT"].isel(Time=0)
