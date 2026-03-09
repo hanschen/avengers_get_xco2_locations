@@ -13,7 +13,6 @@ OUTPUT_DIR = Path("output")
 
 DEBUG = True
 
-
 ds = xr.open_dataset("output/concat_area_frac.nc")
 
 ds_cldfrac = xr.open_dataset(CLDFRAC_DIR / "cldfrac.nc")

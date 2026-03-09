@@ -13,7 +13,6 @@ import xarray as xr
 
 import utils
 
-THRESHOLD = 0.8
 MARGIN = 5  # number of grid points around domain to exclude
 
 START_DATE = datetime(2025, 6, 17)
@@ -34,9 +33,8 @@ for date in utils.daterange(START_DATE, END_DATE, timedelta(days=1)):
 
     ds = xr.open_dataset(DATA_DIR / input_file)
     obs_area_frac = ds["obs_area_frac"]
-    obs_area_frac_binary = xr.where(obs_area_frac >= THRESHOLD, 1, 0)
 
-    vars_list.append(obs_area_frac_binary)
+    vars_list.append(obs_area_frac)
     ds.close()
 
 combined = xr.concat(vars_list, dim="time")
