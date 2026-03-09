@@ -33,7 +33,7 @@ for t, time in enumerate(ds.time.values):
         ds_out["obs_area_frac"][t] = 0
         continue
 
-    cld_obs_area_frac = ds["obs_area_frac"].sel(time=dt) * cldfrac
+    cld_obs_area_frac = ds["obs_area_frac"].sel(time=dt) * (1 - cldfrac)
     ds_out["obs_area_frac"][t] = cld_obs_area_frac
 
 OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
