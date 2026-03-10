@@ -1,28 +1,23 @@
 #!/usr/bin/env -S uv run --script
 """Create files with XCO2 locations."""
 
-from pathlib import Path
-
 import numpy as np
 import pandas as pd
 import xarray as xr
 
+from config import config
+
 REF_YEAR = 2021
-OUTPUT_DIR = Path("output/xco2")
 
-# Minimum grid fraction coverage to consider sounding
-THRESHOLD = 0.9
-
-# ds = xr.load_dataset("output/cloud_filtered.nc")
-ds = xr.load_dataset("output/land_nadir.nc")
-# ds = xr.load_dataset("output/thinned.nc")
+ds = xr.load_dataset(config.output_dir / f"{config.use_obs}.nc")
 
 ds_wrf = xr.load_dataset("input/wrfinput_d01")
 lats = ds_wrf["XLAT"].isel(Time=0)
 lons = ds_wrf["XLONG"].isel(Time=0)
 ds_wrf.close()
 
-OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
+output_dir = config.output_dir / "xco2"
+output_dir.mkdir(exist_ok=True, parents=True)
 
 for t, time in enumerate(ds.time.values):
     obs = ds["obs_area_frac"][t]
@@ -31,9 +26,9 @@ for t, time in enumerate(ds.time.values):
 
     dt = pd.Timestamp(time)
     dt = dt.replace(year=REF_YEAR)  # type: ignore
-    out_file = OUTPUT_DIR / f"{dt:sounding_%Y-%m-%d_%H:%M:%S}.dat"
+    out_file = output_dir / f"{dt:sounding_%Y-%m-%d_%H:%M:%S}.dat"
 
-    j_indices, i_indices = np.where(obs >= THRESHOLD)
+    j_indices, i_indices = np.where(obs >= config.minimum_coverage)
     with open(out_file, "w") as f:
         f.write("# name,lat,lon\n")
 

@@ -8,15 +8,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import xarray as xr
 
-THRESHOLD = 0.9
+from config import config
 
-# ds = xr.open_dataset("output/concat_area_frac.nc")
-# ds = xr.open_dataset("output/cloud_filtered.nc")
-ds = xr.open_dataset("output/land_nadir.nc")
-# ds = xr.open_dataset("output/thinned.nc")
+DATASET = "land_nadir"
+
+ds = xr.open_dataset(config.output_dir / f"{DATASET}.nc")
 
 obs_area_frac = ds["obs_area_frac"]
-obs_num = xr.where(obs_area_frac >= THRESHOLD, 1, 0).sum(dim="time")
+minimum_coverage = config.minimum_coverage
+obs_num = xr.where(obs_area_frac >= minimum_coverage, 1, 0).sum(dim="time")
 ds.close()
 
 ds_wrf = xr.open_dataset("input/wrfinput_d01")
@@ -56,11 +56,10 @@ cf = ax.pcolormesh(
     transform=ccrs.PlateCarree(),
 )
 
-
 cbar = fig.colorbar(cf)
 cbar.set_ticks(np.arange(N + 1))
 cbar.ax.tick_params(labelsize=12)
 cbar.set_label("Number of XCO2 observations", fontsize=14)
 
-plt.savefig("xco2.png", dpi=300, bbox_inches="tight")
+plt.savefig(config.output_dir / "xco2.png", dpi=300, bbox_inches="tight")
 plt.show()

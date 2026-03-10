@@ -3,16 +3,17 @@
 
 import xarray as xr
 
-THINNING = 4
+from config import config
 
-ds = xr.open_dataset("output/land_nadir.nc")
+ds = xr.open_dataset(config.output_dir / "land_nadir.nc")
 
 mask = xr.zeros_like(ds["obs_area_frac"], dtype=bool)
-mask[:, ::THINNING, ::THINNING] = True
+thinning = config.thinning
+mask[:, ::thinning, ::thinning] = True
 
 ds_thinned = ds.where(mask, 0)
 
-ds_thinned.to_netcdf("output/thinned.nc")
+ds_thinned.to_netcdf(config.output_dir / "thinned.nc")
 
 ds.close()
 ds_thinned.close()
